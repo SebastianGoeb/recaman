@@ -1,13 +1,19 @@
-def recaman(iterations, start=0, step_increment=1, first_step=1):
+import bisect
+
+
+def recaman(start=0, step_increment=1, first_step=1):
     current = start
     step = first_step
-    visited = []
-    while len(visited) < iterations:
+    visited = [0]
+    yield (current)
+
+    while True:
         backward_candidate = current - step
-        if backward_candidate <= 0 or backward_candidate in visited:
+        already_visited = visited[bisect.bisect_left(visited, backward_candidate)] == backward_candidate
+        if backward_candidate < 0 or already_visited:
             current = current + step
         else:
             current = current - step
         step = step + step_increment
-        visited.append(current)
+        bisect.insort(visited, current)
         yield (current)
